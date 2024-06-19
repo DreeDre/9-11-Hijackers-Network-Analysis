@@ -89,9 +89,6 @@ as_tbl_graph(g) %>%
   slice(1:3) %>%
   as_tibble()
 ```
-```{r}
-degree(g)["Ziad Jarrah"]
-```
 ## Analisi globale
 Analizzando la distribuzione dei gradi della rete, si può notare che questa è distribuita esponenzialmente, ovvero che la maggioranza dei nodi ha poche connessioni, mentre solo alcuni nodi hanno un grado molto alto, detti anche hub. La rete presenta quindi proprietà scale-free, dove alcuni nodi si distinguono per un numero molto alto di connessioni, ben oltre la media della rete. Gli hub permettono di mantenere la lunghezza media dei cammini della rete relativamente bassa e sono quindi dei nodi fondamentali per la circolazione delle informazioni attraverso la rete./
 Le reti scale-free sono particolarmente resistenti alla eliminazione casuale di nodi, ma vulnerabili alla rimozione degli hub. Questa caratteristica sarà fondamentale quando verranno verificati alcuni metodi per indebolire la rete.
