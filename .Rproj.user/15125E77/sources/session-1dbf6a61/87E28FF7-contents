@@ -1,0 +1,234 @@
+---
+title: "9-11 Hijackers - Analisi della rete di comunicazione e dell'efficienza"
+author: "Andrea Marcon - 152098 - Università di Udine"
+output:
+  html_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduzione
+In questo lavoro verrà analizzata la rete di comunicazioni terroristica che organizzò e mise in atto gli attentati dell'11 settembre 2001 al World Trade Center e al Pentagono. Lo scopo di questo progetto è utilizzare le principali tecniche di analisi delle reti per identificare gli attori più importanti coinvolti in questi eventi e determinare quali metodi possono essere impiegati per indebolire la rete nel modo più efficace.\
+Tutti i dati utilizzati in questo progetto possono essere trovati [qui](https://networks.skewed.de/net/terrorists_911) e sono organizzati in due file csv, che contengono le informazioni su nodi e archi rispettivamente.
+
+## Attacchi dell'11 settembre 2001
+Con attacchi dell'11 settembre, detti anche 9/11, si fa riferimento a quattro attacchi terroristici condotti da al-Qaeda contro gli Stati Uniti.\
+Gli attacchi furono eseguiti da quattro gruppi, per un totale di 19 terroristi, che dirottarono quattro aerei di linea. Due di questi furono fatti schiantare contro le Torri Gemelle del World Trade Center a New York. Un terzo aereo colpì il Pentagono a Washington D.C. L'ultimo si schiantò in un campo in Pennsylvania, in seguito a una rivolta dei passeggeri.\
+
+Questi attacchi causarono la morte di circa 3.000 persone e influenzarono profondamente la politica estera e la sicurezza nazionale degli Stati Uniti e del mondo intero.
+Più informazioni possono essere trovate in questo [report](https://govinfo.library.unt.edu/911/report/911Report.pdf) stilato dal governo degli USA.
+```{r warning=F, error=F, echo=F, show=F, include=F}
+library(igraph)
+library(tidygraph)
+library(tidyverse)
+library(ggplot2)
+library(ggraph)
+library(ggeasy)
+```
+
+## La rete di comunicazioni
+```{r echo = F}
+nodes = as.data.frame(read.csv("data/nodes.csv"))
+edges = as.data.frame(read.csv("data/edges.csv"))
+layout = as.matrix(cbind(nodes$x, nodes$y))
+g = graph_from_data_frame(edges, nodes, directed = F)
+V(g)$group = as_factor(V(g)$group)
+colors = c("orange", "lightgreen", "purple", "lightblue", "red")
+```
+La rete di comunicazione può essere modellata come un grafo indiretto, in cui ogni nodo rappresenta un terrorista che ha collaborato, organizzato o finanziato i diversi attacchi, mentre un arco indica un'associazione sociale confermata tra due attori. I nodi contengono alcune informazioni quali l'anagrafica del soggetto e, se applicabile, il volo su cui era a bordo durante gli attacchi. La rete è stata ricostruita in seguito agli eventi, utilizzando i dati investigativi resi pubblici in quel periodo; di conseguenza, la rete potrebbe non corrispondere completamente a quella reale, dato che non tutti gli attori potrebbero essere noti.\
+La rete sociale è formata da `r vcount(g)` attori e `r ecount(g)` collegamenti.\
+
+```{r echo = F}
+ggraph(as_tbl_graph(g), layout = layout) +
+  geom_edge_link(aes(alpha = centrality_edge_betweenness()), show.legend = F) +
+  geom_node_point(aes(color = group, size = centrality_degree())) +
+  # geom_node_text(aes(label = str_trunc(name, 8, ellipsis = "..."))) +
+  ggtitle("9/11 Hijackers communication network") +
+  guides(size = "none", alpha = "none") +
+  scale_color_manual(values = colors, name = "Flight", labels = c("A.A. Flight 11", "A.A. Flight 77", "U.A. Flight 93", "U.A. Flight 175", "No flight")) +
+  theme_void() 
+```
+
+## Analisi della centralità
+Quali sono gli attori più importanti nella rete terroristica? Quali sono i nodi più influenti?\
+Il grado dei nodi, ovvero il numero di collegamenti di un determinato nodo, può fornire una prima risposta a queste due domande.\
+
+Analizzando i primi dieci nodi con grado più alto nella rete, si nota che al primo posto si colloca Mohamed Atta, il pilota del volo American Airlines 11 e coordinatore principale delle operazioni, seguito da Marwan Al-Shehhi e Hani Hanjour, piloti dei voli United Airlines 175 e American Airlines 77, rispettivamente. Tra i nodi successivi, solo quattro non hanno partecipato direttamente agli attacchi: Essid Sami Ben Khemais, un noto trafficante di armi affiliato ad Al-Qaeda, Djamel Beghal, un altro affiliato ad Al-Qaeda, Ramzi bin al-Shibh e Said Bahaji, noti per aver finanziato e facilitato gli attacchi dell'11 settembre. Tutti gli altri attori rimanenti erano a bordo di un volo durante gli attacchi.
+```{r echo = F}
+deg = as_tbl_graph(g) %>%
+  activate(nodes) %>%
+  mutate(degree = centrality_degree()) %>%
+  arrange(desc(degree)) %>%
+  slice(1:10) %>%
+  select(name, degree) %>%
+  as_tibble()
+deg
+```
+```{r echo = F}
+ggraph(as_tbl_graph(g), layout = layout) +
+  geom_edge_link(aes(alpha = centrality_edge_betweenness()), show.legend = F) +
+  geom_node_point(aes(color = group, size = centrality_degree())) +
+  geom_node_text(aes(label = ifelse(name %in% deg$name, name, ""))) +
+  ggtitle("Top 10 highest-ranked nodes") +
+  guides(size = "none", alpha = "none") +
+  scale_color_manual(values = colors, name = "Flight", labels = c("A.A. Flight 11", "A.A. Flight 77", "U.A. Flight 93", "U.A. Flight 175", "No flight")) +
+  theme_void() 
+```
+
+Anche le misure di centralità betweenness, che misura il numero di cammini più brevi che passano per un determinato nodo, closeness, che misura la distanza media da un nodo agli altri, e dell'autovettore confermano il ruolo centrale di Mohamed Atta come mediatore e leader della rete. Anche gli altri piloti hanno un'alta centralità, dimostrando la loro rilevanza all'interno della rete e nella pianificazione e organizzazione degli attacchi.\
+
+E' interessante osservare che l'unico pilota, Ziad Jarrah, che non risulta rilevante all'interno della rete secondo nessuna misura di centralità, abbia comandato l'unico attacco che non ha raggiunto il proprio obiettivo, ovvero il volo United Airlines 93. Il fallimento dell'attacco potrebbe essere infatti attribuito alla bassa centralità del gruppo nella rete, che può aver portato ad una comunicazione e organizzazione inefficiente.
+```{r echo = F}
+as_tbl_graph(g) %>%
+  activate(nodes) %>%
+  mutate(degree = centrality_degree(), closeness = centrality_closeness(), betweenness = centrality_betweenness(), eigen = centrality_eigen()) %>%
+  select(name, degree, closeness, betweenness, eigen) %>%
+  arrange(desc(degree), desc(closeness), desc(betweenness), desc(eigen)) %>%
+  slice(1:3) %>%
+  as_tibble()
+```
+```{r}
+degree(g)["Ziad Jarrah"]
+```
+## Analisi globale
+Analizzando la distribuzione dei gradi della rete, si può notare che questa è distribuita esponenzialmente, ovvero che la maggioranza dei nodi ha poche connessioni, mentre solo alcuni nodi hanno un grado molto alto, detti anche hub. La rete presenta quindi proprietà scale-free, dove alcuni nodi si distinguono per un numero molto alto di connessioni, ben oltre la media della rete. Gli hub permettono di mantenere la lunghezza media dei cammini della rete relativamente bassa e sono quindi dei nodi fondamentali per la circolazione delle informazioni attraverso la rete./
+Le reti scale-free sono particolarmente resistenti alla eliminazione casuale di nodi, ma vulnerabili alla rimozione degli hub. Questa caratteristica sarà fondamentale quando verranno verificati alcuni metodi per indebolire la rete.
+```{r echo = F}
+# barplot(distance_table(g)$res / sum(distance_table(g)$res))
+hist(degree(g), main = "Degree distribution", xlab = "Degree", ylab = "Frequency")
+```
+
+La lunghezza media dei cammini è molto bassa e ammonta a `r mean_distance(g)`, permettendo di affermare che la rete analizzata gode della proprietà di piccolo mondo. Questa proprietà globale indica che la distanza che separa i nodi è piccola, in relazione al numero di nodi che compongono la rete.
+Il diametro della rete è di lunghezza `r diameter(g)`.\
+```{r echo = F}
+g_diam = g
+V(g_diam)$color = "white"
+E(g_diam)$color = "black"
+diam = get_diameter(g_diam)
+E(g_diam, path = diam)$color = "red"
+V(g_diam)[diam]$color = "red"
+par(mar = c(1, 1, 1, 1))
+plot(g_diam, vertex.label = NA, vertex.size = 5, main = "Diameter of the network")
+```
+
+La densità della rete, ovvero la percentuale di archi utilizzati su tutti gli archi possibili, è molto bassa. Infatti, solo l'`r (ecount(g) / (((vcount(g) - 1) * vcount(g)) / 2) * 100)`% delle connessioni è utilizzato. La bassa densità e il grado medio, pari a `r mean(degree(g))`, indicano che la rete analizzata è sparsa. Nonostante questa caratteristica, la lunghezza media dei cammini è molto bassa, evidenziando nuovamente la presenza di hub centrali che svolgono il ruolo d'intermediari nelle comunicazioni e che collegano tra loro i nodi che a prima vista appaiono distanti.\
+
+Queste proprietà analizzate sono coerenti con le finalità di questa rete: l'organizzazione degli attacchi è perpetrata da piccoli gruppi che non hanno contatti e non si conoscono tra loro, minimizzando la possibilità che la cattura di un organizzatore comprometta la stabilità della rete e faccia fallire il piano. Le comunicazioni tra i vari gruppi avvengono attraverso l'intermediazione di pochi hub che ricoprono un ruolo di rilievo nell'organizzazione e nell'attuazione degli attacchi.
+
+## Analisi della sotto-rete dei dirottatori
+Utilizzando i gruppi presenti nel dataset è possibile analizzare la sotto-rete dei terroristi che hanno dirottato i quattro voli.
+```{r echo = F}
+flights = induced_subgraph(g, V(g)[V(g)$group %in% c(0, 1, 2, 3)])
+
+V(flights)$color <- colors[V(flights)$group]
+for (e in E(flights)) {
+  ends = ends(flights, e)
+  from = V(flights)[ends[1]]$group
+  to = V(flights)[ends[2]]$group
+  if (from == to) {
+    E(flights)[e]$color = V(flights)[ends[1]]$color
+    E(flights)[e]$width = 3
+  } else {
+    E(flights)[e]$color = "black"
+    E(flights)[e]$width = 0.3
+  }
+}
+par(mar = c(1, 1, 3, 1))
+plot(flights, vertex.label.color = "black", vertex.size = 5, vertex.label.cex = 0.75, main = "Hijackers subnetwork") 
+legend("topright", c("A.A. Flight 11", "A.A. Flight 77", "U.A. Flight 93", "U.A. Flight 175"), fill = colors)
+```
+```{r echo = F}
+g0 = induced_subgraph(flights, V(flights)[V(flights)$group == 0])
+g1 = induced_subgraph(flights, V(flights)[V(flights)$group == 1])
+g2 = induced_subgraph(flights, V(flights)[V(flights)$group == 2])
+g3 = induced_subgraph(flights, V(flights)[V(flights)$group == 3])
+par(mfrow = c(2,2), mar = c(1,1,1,1))
+plot(g0, vertex.label.color = "black", vertex.size = 10, main = "A.A. Flight 11")
+plot(g1, vertex.label.color = "black", vertex.size = 10, main = "A.A. Flight 77")
+plot(g2, vertex.label.color = "black", vertex.size = 10, main = "U.A. Flight 93")
+plot(g3, vertex.label.color = "black", vertex.size = 10, main = "U.A. Flight 175")
+```
+
+La sotto-rete dei dirottatori è composta da `r vcount(flights)` nodi e `r ecount(flights)` connessioni. La rete è molto densa, con un grado medio pari a `r mean(degree(flights))`, una densità dell'`r (ecount(flights) / (((vcount(flights) - 1) * vcount(flights)) / 2)) * 100`%.\
+Si può notare che i nodi sono molto vicini tra loro, con una distanza media pari a `r mean_distance(flights)` e un diametro di lunghezza `r diameter(flights)`.\
+
+A differenza della rete completa, è comprensibile che la sotto-rete dei dirottatori sia caratterizzata da un'alta densità: questa rappresenta infatti il nucleo centrale delle operazioni, di conseguenza le sue componenti devono essere in stretto contatto tra loro.\
+Come anticipato in precedenza, il gruppo che ha dirottato il volo United Airlines 93 è il meno connesso internamente.
+
+## Analisi dell'efficienza
+```{r echo = F}
+efficency <- function(g){
+  n_v = vcount(g)
+  if (n_v <=  1) {
+    return(0)
+  }
+  efficency = 0
+  paths = distances(g, v = V(g), to = V(g))
+  for (path in paths) {
+    if (path !=  0 && !is.infinite(path)){
+      efficency = efficency + (1 / path)
+    }
+  }
+  return(efficency / (n_v * (n_v - 1)))
+}
+
+efficency_remove <- function(g, method = "rand"){
+  g_copy = g
+  steps = data.frame()
+  steps = rbind(steps, list(index = 1, efficency = efficency(g_copy), type = method))
+  i = 2
+  while (vcount(g_copy) > 0) {
+    if (method == "rand") {
+       node = sample(V(g_copy), 1)
+    } else if (method == "deg") {
+      node = which.max(degree(g_copy) == max(degree(g_copy)))
+    } else if (method == "eig") {
+      node = which.max(eigen_centrality(g_copy)$vector == max(eigen_centrality(g_copy)$vector))
+    } else if (method == "betw") {
+      node = which.max(betweenness(g_copy) == max(betweenness(g_copy)))
+    }
+    g_copy = delete_vertices(g_copy, node)
+    steps = rbind(steps, list(index = i, efficency = efficency(g_copy),  type = method))
+    i = i + 1
+  }
+  return(steps)
+}
+```
+L'efficienza E(G) di una rete è una misura utilizzata per quantificare quanto efficientemente l'informazione circola all'interno della rete.\
+L'efficienza di comunicazione tra due nodi *i* e *j* è inversamente proporzionale alla loro distanza minima *d~ij~*. Quando nel grafo non esiste un cammino tra i due nodi l'efficienza corrisponde a 0.\
+L'efficienza globale di un grafo può essere quindi definita come la somma dell'efficienza tra tutte le coppie di nodi *i* e *j*, normalizzata per il numero di tutte le possibili coppie di nodi nella rete:\
+ \[E(G) = \frac{1}{N(N-1)}\sum_{i\neq j \in G}{\frac{1}{d_{ij}}}\]
+L'efficienza globale della rete analizzata è pari a `r efficency(g)`.\
+Rimuovendo iterativamente i nodi dal grafo, seguendo un determinato ordine definito attraverso una misura di centralità, e calcolando l'efficienza globale a ogni passo, è possibile definire quale sia l'approccio più efficace per indebolire la rete e attaccare le sue vulnerabilità.\
+Sono stati messi a confronto quattro criteri di rimozione: ordinamento per grado, per eigenvector centrality, per betweenness centrality e rimozione casuale.\
+```{r echo = F}
+eff_deg = efficency_remove(g, "deg")
+eff_eig = efficency_remove(g, "eig")
+eff_betw = efficency_remove(g, "betw")
+eff_rand = efficency_remove(g)
+
+ggplot(rbind(eff_deg, eff_eig, eff_betw, eff_rand), aes(x = index, y = efficency, color = type)) +
+  geom_line() +
+  labs(title = 'Graph Efficiency After Node Removal',
+       x = 'Step',
+       y = 'Efficiency',
+       color = 'Removal Type') +
+  theme_minimal()
+```
+
+Come si può notare dal grafico, rimuovere i nodi con alta betweenness sembra essere il miglior metodo per indebolire la rete, almeno per le prime iterazioni. L'aumento dell'efficienza globale verso le ultime iterazioni è dovuto dalle caratteristiche intrinseche di questa misura di centralità: rimuovendo per primi i nodi attraverso i quali passano i percorsi più brevi, si va a disconnettere molto velocemente il grafo, semplificandone sempre di più la struttura. A un certo punto nel grafo non saranno più presenti nodi per i quali passano percorsi più brevi, di conseguenza tutti i nodi rimanenti avranno betweenness pari a zero, e la loro rimozione andrà solamente a diminuire il numero delle possibili coppie di nodi, aumentando quindi l'efficienza media.\
+
+
+## Conclusioni
+In questo lavoro è stata analizzata la rete di comunicazione terroristica responsabile degli attacchi dell'11 settembre 2001. Attraverso l'applicazione delle principali tecniche di analisi delle reti, è stato possibile identificare quali attori ricoprivano un ruolo centrale nella rete e mettere in evidenza le loro connessioni e le dinamiche che hanno facilitato l'organizzazione di tali eventi.
+
+L'analisi delle caratteristiche globali della rete hanno permesso di evidenziare la struttura scale-free della rete, che la rende vulnerabile alla rimozione mirata degli hub. Questa caratteristica è stata confermata dalle simulazioni di calcolo dell'efficienza e di rimozione dei nodi utilizzando diversi criteri, dove la strategia più efficace si è rivelata quella basata su betweenness centrality.
+
+Questo studio ha fornito una comprensione più profonda della struttura organizzativa degli attacchi dell'11 settembre e ha offerto diversi spunti su come le diverse tecniche di analisi delle reti possono essere impiegate per individuare potenziali minacce e per disgregare organizzazioni criminali in modo efficiente.
+
+### Fonti
+* [911Report](https://govinfo.library.unt.edu/911/report/911Report.pdf) 
+* [Hijackers in the September 11 attacks](https://en.wikipedia.org/wiki/Hijackers_in_the_September_11_attacks)
+* [September 11 attacks](https://en.wikipedia.org/wiki/September_11_attacks)

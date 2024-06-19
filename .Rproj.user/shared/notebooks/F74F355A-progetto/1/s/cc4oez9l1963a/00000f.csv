@@ -1,0 +1,6 @@
+"0","nodes = as.data.frame(read.csv(""data/nodes.csv""))"
+"0","edges = as.data.frame(read.csv(""data/edges.csv""))"
+"0","layout = as.matrix(cbind(nodes$x, nodes$y))"
+"0","g = graph_from_data_frame(edges, nodes, directed = F)"
+"0","V(g)$group = as_factor(V(g)$group)"
+"0","colors = c(""orange"", ""lightgreen"", ""purple"", ""lightblue"", ""red"")"

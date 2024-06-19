@@ -1,0 +1,2 @@
+"0","# barplot(distance_table(g)$res / sum(distance_table(g)$res))"
+"0","hist(degree(g), main = ""Degree distribution"", xlab = ""Degree"", ylab = ""Frequency"")"

@@ -1,0 +1,7 @@
+"0","as_tbl_graph(g) %>%"
+"0","  activate(nodes) %>%"
+"0","  mutate(degree = centrality_degree(), closeness = centrality_closeness(), betweenness = centrality_betweenness(), eigen = centrality_eigen()) %>%"
+"0","  select(name, degree, closeness, betweenness, eigen) %>%"
+"0","  arrange(desc(degree), desc(closeness), desc(betweenness), desc(eigen)) %>%"
+"0","  slice(1:3) %>%"
+"0","  as_tibble()"

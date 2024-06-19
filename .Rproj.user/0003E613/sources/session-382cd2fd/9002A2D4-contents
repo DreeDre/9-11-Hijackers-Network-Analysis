@@ -1,0 +1,217 @@
+---
+title: "Progetto"
+author: "Andrea Marcon - 152098"
+output: html_document
+date: "2024-02-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(tidygraph)
+library(igraph)
+library(ggraph)
+library(e1071)
+library(ggplot2)
+library(jsonlite)
+```
+
+```{r}
+edges <- read.csv("edges.csv")
+
+nodes <- read.csv("nodes.csv")
+
+layout <- as.matrix(cbind(nodes$x, nodes$y))
+g <- graph_from_data_frame(edges, nodes, directed=FALSE)
+```
+
+```{r,include = !knit_report, warning=FALSE,message=FALSE}
+as_tbl_graph(g) %>%
+  activate(nodes) %>%
+  mutate(degree=centrality_degree()) %>%
+  select(name, degree) %>%
+  arrange(desc(degree)) %>%
+  as_tibble() %>%
+  slice(1:10) %>%
+  ggplot(aes(x=reorder(name,-degree), y=degree, fill=degree)) +
+  geom_bar(stat="identity", show.legend=FALSE) +
+  labs(title="Top 20 nodi con grado più alto", x="", y="") +
+  scale_y_continuous(breaks = seq(0,22)) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+```
+
+```{r}
+ccdf <- function(x){
+  deg = degree(x)
+  max_deg = max(deg)
+  pk = c()
+  for (i in 1:max_deg)
+    pk = c(pk, sum(deg>=i)/length(deg)) 
+  return(pk)
+}
+
+as_tbl_graph(g) %>%
+  mutate(degree=centrality_degree()) %>%
+  as_tibble() %>%
+  ggplot() +
+  geom_histogram(aes(x=degree), binwidth=2)
+
+hist(degree(g), xlab="Degree")
+plot(2:max(degree(g)), ccdf(g)[2:length(ccdf(g))], log="xy", type = "l", xlab="Degree", ylab="CCDF")
+```
+
+```{r}
+m = rep(0, 9)
+m[1] = modularity(cluster_leading_eigen(g))
+m[2] = modularity(cluster_fast_greedy(g))
+m[3] = modularity(cluster_edge_betweenness(g))
+m[4] = modularity(cluster_walktrap(g))
+m[5] = modularity(cluster_spinglass(g))
+m[6] = modularity(cluster_label_prop(g))
+m[7] = modularity(cluster_infomap(g))
+m[8] = modularity(cluster_louvain(g))
+m[9] = modularity(cluster_optimal(g))
+names(m) = c("leading_eigen", 
+             "fast_greedy", 
+             "edge_betweenness", 
+             "walktrap", 
+             "spinglass",
+             "label_prop", 
+             "infomap", 
+             "louvain", 
+             "optimal")
+
+sort(m, decreasing = TRUE)
+```
+
+```{r}
+as_tbl_graph(g) %>%
+  activate(nodes) %>%
+  mutate(community = as.factor(group_spinglass()),
+         degree = centrality_degree()) %>%
+  mutate(closeness = centrality_closeness()) %>%
+  ggraph(layout=layout) + 
+  geom_edge_link() +  
+  geom_node_point(aes(colour=community, size=degree)) +
+  geom_node_text(aes(filter=degree>=10, label=name, #colour=community
+                     ), repel=TRUE)
+```
+
+```{r}
+as_tbl_graph(g) %>%
+  activate(nodes) %>%
+  mutate()
+
+b <- cohesive_blocks(g)
+cb <- graphs_from_cohesive_blocks(b, g)
+most_cb <- cb[[which.max(cohesion(b))]]
+
+V(g)$color <- "white" 
+V(g)[blocks(b)[[which.max(cohesion(b))]]]$color <- "red" 
+
+plot(g, layout=layout, vertex.label=NA, vertex.size=5)
+```
+
+```{r}
+percolate <- function(g, size, d) {
+  
+  giant = vector()
+
+  c = components(g)
+  giant[1] = max(c$csize)
+  
+  names(d) = 1:length(d)
+  d = sort(d, decreasing=TRUE)
+  vital = as.integer(names(d[1:size]))
+  
+  for (i in 1:size) {
+    c = components(delete_vertices(g, vital[1:i]))
+    giant[i+1] = max(c$csize)
+  }
+  return(giant)
+}
+
+size <- vcount(g) / 2
+percolate(g, size, d=degree(g))
+```
+
+```{r}
+min_separators(g)
+g_split <- delete.vertices(g, V(g)[V(g)$name == "Mamoun Darkazanli"])
+components(g_split)
+plot(g_split,layout=l, vertex.label=NA, vertex.size = 5)
+```
+
+```{r}
+efficency <- function(g){
+  if (vcount(g) <= 1) return(0)
+  efficency = 0
+  paths <- shortest.paths(g, v=V(g), to=V(g))
+  for (i in paths) {
+    if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+  }
+  return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+
+efficency_remove <- function(g, node_names){
+  g_copy = g
+  g_colored = g
+  V(g_colored)$color="white"
+  E(g_colored)$color="green"
+  steps=data.frame()
+  steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+  i=0
+  par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+  for (node_name in node_names){
+    g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+    steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+    if(i<6) {
+      V(g_colored)[V(g_colored)$name==node_name]$color="red" 
+      E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+      plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+      i=i+1
+    }
+  }
+  return(steps)
+}
+
+```
+
+
+```{r}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+  geom_line(show.legend=FALSE) +
+  geom_point(show.legend=FALSE) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+efficency_random=efficency_remove(g, nodes_random)
+ggplot(efficency_random, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+  geom_line(show.legend=FALSE) +
+  geom_point(show.legend=FALSE) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+```{r}
+```
+

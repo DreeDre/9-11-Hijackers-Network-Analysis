@@ -1,0 +1,3 @@
+"0","nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]"
+"2","Error in V(g) : could not find function ""V""
+"

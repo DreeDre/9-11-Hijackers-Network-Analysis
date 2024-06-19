@@ -1,0 +1,8 @@
+"0","deg = as_tbl_graph(g) %>%"
+"0","  activate(nodes) %>%"
+"0","  mutate(degree = centrality_degree()) %>%"
+"0","  arrange(desc(degree)) %>%"
+"0","  slice(1:10) %>%"
+"0","  select(name, degree) %>%"
+"0","  as_tibble()"
+"0","deg"

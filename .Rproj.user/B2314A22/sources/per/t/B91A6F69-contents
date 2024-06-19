@@ -1,0 +1,512 @@
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+.1)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, margin=0, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+.1)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+2)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+3)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 4), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<8) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+node_names <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+average.path.length(g)
+mean_distance(g)
+rm(graphs)
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, node_names)
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+names_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(ord$steps, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+rm(list=ls())
+library(tidyverse)
+library(tidygraph)
+library(igraph)
+library(ggraph)
+library(e1071)
+library(ggplot2)
+library(jsonlite)
+edges <- read.csv("edges.csv")
+nodes <- read.csv("nodes.csv")
+layout <- as.matrix(cbind(nodes$x, nodes$y))
+g <- graph_from_data_frame(edges, nodes, directed=FALSE)
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency_ord
+nodes_ord
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="green"
+E(g_colored)$color="black"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+}
+efficency_remove(nodes_ord)
+efficency_remove(g, nodes_ord)
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="green"
+E(g_colored)$color="green"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+}
+efficency_remove(g, nodes_ord)
+a=efficency_remove(g, nodes_ord)
+rm(a)
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="green"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+}
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="green"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+print(list(name=node_name, efficency=efficency(g_copy)))
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+}
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="green"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+print(steps)
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+}
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency <- function(g){
+if (vcount(g) <= 1) return(0)
+efficency = 0
+paths <- shortest.paths(g, v=V(g), to=V(g))
+for (i in paths) {
+if (i != 0 && !is.infinite(i)) efficency = efficency + (1 / i)
+}
+return(efficency / (vcount(g) * (vcount(g) - 1)))
+}
+efficency_remove <- function(g, node_names){
+g_copy = g
+g_colored = g
+V(g_colored)$color="white"
+E(g_colored)$color="green"
+steps=data.frame()
+steps=rbind(steps, list(name="start", efficency=efficency(g_copy)))
+i=0
+par(mfrow=c(2, 3), mar=c(0,0,0,0)+.5)
+for (node_name in node_names){
+g_copy = delete_vertices(g_copy, V(g_copy)[V(g_copy)$name==node_name])
+steps=rbind(steps, list(name=node_name, efficency=efficency(g_copy)))
+if(i<6) {
+V(g_colored)[V(g_colored)$name==node_name]$color="red"
+E(g_colored)[incident(g_colored, V(g_colored)$name==node_name)]$color = "red"
+plot(g_colored, layout=layout, vertex.label=NA, vertex.size = 5, main=round(efficency(g_copy), digits=2))
+i=i+1
+}
+}
+return(steps)
+}
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency_random=efficency_remove(g, nodes_random)
+ggplot(efficency_random, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+nodes_ord <- V(g)$name[order(degree(g), decreasing = TRUE)]
+nodes_random <- sample(V(g)$name)
+efficency_ord=efficency_remove(g, nodes_ord)
+ggplot(efficency_ord, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+efficency_random=efficency_remove(g, nodes_random)
+ggplot(efficency_random, aes(x=reorder(name, -efficency), y=efficency, group=1)) +
+geom_line(show.legend=FALSE) +
+geom_point(show.legend=FALSE) +
+theme(axis.text.x=element_text(angle=45, hjust=1))
+load("C:/Users/andre/Desktop/Uni/ADS/progetto/.RData")

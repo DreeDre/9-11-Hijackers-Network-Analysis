@@ -1,0 +1,6 @@
+"0","edges <- read.csv(""edges.csv"")"
+"0",""
+"0","nodes <- read.csv(""nodes.csv"")"
+"0",""
+"0","layout <- as.matrix(cbind(nodes$x, nodes$y))"
+"0","g <- graph_from_data_frame(edges, nodes, directed=FALSE)"

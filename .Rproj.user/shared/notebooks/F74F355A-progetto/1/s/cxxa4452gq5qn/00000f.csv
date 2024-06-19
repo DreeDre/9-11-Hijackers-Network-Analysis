@@ -1,0 +1,6 @@
+"0","g0 = induced_subgraph(flights, V(flights)[V(flights)$group == 0])"
+"0","g1 = induced_subgraph(flights, V(flights)[V(flights)$group == 1])"
+"0","g2 = induced_subgraph(flights, V(flights)[V(flights)$group == 2])"
+"0","g3 = induced_subgraph(flights, V(flights)[V(flights)$group == 3])"
+"0","par(mfrow = c(2,2), mar = c(1,1,1,1))"
+"0","plot(g0, vertex.label.color = ""black"", vertex.size = 10, main = ""A.A. Flight 11"")"

@@ -1,0 +1,4 @@
+"0","nodes = as.data.frame(read.csv(""nodes.csv""))"
+"0","edges = as.data.frame(read.csv(""edges.csv""))"
+"0","layout = as.matrix(cbind(nodes$x, nodes$y))"
+"0","g = graph_from_data_frame(edges, vertices = nodes, directed = FALSE)"

@@ -1,0 +1,8 @@
+"0","g_diam = g"
+"0","V(g_diam)$color = ""white"""
+"0","E(g_diam)$color = ""black"""
+"0","diam = get_diameter(g_diam)"
+"0","E(g_diam, path = diam)$color = ""red"""
+"0","V(g_diam)[diam]$color = ""red"""
+"0","par(mar = c(1, 1, 1, 1))"
+"0","plot(g_diam, vertex.label = NA, vertex.size = 5, main = ""Diameter of the network"")"
