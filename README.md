@@ -1,5 +1,5 @@
 # 9-11-Hijackers-Network-Analysis
-project for the Advanced Data Science course at the University of Udine.
+Project for the Advanced Data Science course at the University of Udine.
 The analysis repor can be found in:  **progetto.html**
 
 **What this repository contains:**
